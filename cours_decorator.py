@@ -135,3 +135,22 @@ Truc.class_occurences()
 
 Truc.static()
 # %%
+# décorateur timer
+from time import perf_counter, sleep
+
+def chrono(f):
+    def wrapper(*a, **kw):
+        start = perf_counter()
+        ret = f()
+        print(f"{perf_counter() - start} s")
+        return ret
+    return wrapper
+
+@chrono
+def test():
+    sleep(0.1)
+
+
+test()
+
+# %%
