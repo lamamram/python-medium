@@ -227,12 +227,6 @@ class C:
 c = C("TRUC")
 print(c)
 del c
-# %%
-# les fichiers sont des itérateurs
-f = open("cours_lambdas.py", "r")
-print(next(f))
-f.close()
-
 
 # %%
 # else pour for et while
@@ -256,6 +250,40 @@ while i > 0:
     break
 else:
      print(f"{i} == 0 !")
+
+
+
+# %%
+# les fichiers sont des itérateurs
+f = open("cours_lambdas.py", "r")
+print(next(f))
+f.close()
+
+# %%
+# gestionaire de contexte: with
+# la resource est refermée en sortant du bloc
+with open("cours_lambdas.py", "r") as f:
+    print(next(f))
+
+# %%
+# all et any
+l = [1, 0, 3, 4]
+# all vrai si tout est vrai
+all(l)
+# any est vrai si ou moins un élément est vrai
+any(l)
+# %%
+
+try:
+    # 3/0
+    3
+    quit(0)
+except ZeroDivisionError as ze:
+    print(ze)
+else:
+    print("no exception")
+finally:
+    print("whatever it takes")
 
 
 
