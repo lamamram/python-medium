@@ -51,3 +51,18 @@ print(list(p))
 first, second, third, *others = p
 print(first, second, third, others[3:])
 # %%
+from itertools import accumulate, repeat
+from time import time
+# exemple itertools : accumulate
+list(accumulate(range(10)))
+
+# calcul de suites mathématiques
+# sn = p*s(n-1) + q*s(n-2)
+p, q = 2, 3
+initial_values = (0, 1)
+suite = accumulate(
+    repeat(initial_values, times=10),
+    func=lambda s, _: (s[1], p*s[1] + q*s[0])
+)
+print(list(map(lambda t: t[0], suite)))
+# %%
