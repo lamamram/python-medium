@@ -14,7 +14,21 @@ from inspect import getfullargspec
 
 def type_control(f):
     def wrapper(*a, **kw):
-        pass
+        locales = locals()
+        annots = f.__annotations__
+        positionals= getfullargspec(f)[0]
+        print(locales)
+        print(annots)
+        print(positionals)
+        # # paramètres nommés à l'appel
+        # for param, value in locales["kw"].items():
+        #     if param in annots and not isinstance(value, annots[param]):
+        #         raise TypeError(f"{param}: {value} not a {annots[param].__name__} !")
+        
+        # # paramètres positionnels
+        # for i, value in enumerate(locales["a"]):
+        #     if positionals[i] in annots and not isinstance(value, annots[positionals[i]]):
+        #         raise TypeError(f"{positionals[i]}: {value} not a {annots[positionals[i]].__name__} !")
         return f(*a, **kw)
     return wrapper
 
@@ -22,6 +36,7 @@ def type_control(f):
 def target(a: int, b, c: str = "default"):
     print(a, b, c)
 
-target(0, 3.14, "hello")
-target("hi", 3.14, "hello")
+# target(0, 3.14, "hello")
+# target("hi", 3.14)
 target(b=[], a=1)
+# %%

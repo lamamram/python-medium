@@ -288,3 +288,27 @@ finally:
 
 
 # %%
+
+class Truc:
+
+    def __init__(self, p1, p2) -> None:
+        self.p1 = p1
+        self.p2 = p2
+
+    def __getitem__(self, i):
+        return self.p1 if i == 1 else self.p2
+    
+    def __setitem__(self, i, value):
+        if i == 1:
+            self.p1 = value
+        else:
+            self.p2 = value
+
+t = Truc(1, 2)
+
+t.p1, t.p2
+t[1], t[2]
+
+t[1] = 0
+t.p1
+# %%
