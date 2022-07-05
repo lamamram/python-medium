@@ -11,4 +11,26 @@ Le langage Python est placé sous une licence libre proche de la licence BSD4 et
 
 Il est également apprécié par certains pédagogues qui y trouvent un langage où la syntaxe, clairement séparée des mécanismes de bas niveau, permet une initiation aisée aux concepts de base de la programmation6.
 """
-# virer la ponctuation
+# virer la ponctuation, les \n etc..
+text = re.sub(f"[{punctuation}]", " ", text)
+text = re.sub("\\r?\\n", " ", text)
+text = re.sub(" +", " ", text)
+words = text.lower().split()
+words = list(filter(lambda w: len(w) > 3, words))
+
+# trier
+words.sort()
+
+# regrouper 
+occurences = map(
+    lambda gb: (gb[0], len(list(gb[1]))),
+    groupby(words)
+)
+# trier les occurences
+occurences = sorted(
+    occurences,
+    key=lambda t: t[1],
+    reverse=True
+)
+dict(occurences)
+# %%
