@@ -56,6 +56,8 @@ class SqliteDb(metaclass=SingleMeta):
         self.__db.close()
     
     def __exit__(self, x_type, x_name, x_trace):
+        if not x_type: self.__db.commit()
+        else: self.__db.rollback()
         self.close()
 
 
