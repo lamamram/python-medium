@@ -312,3 +312,13 @@ t[1], t[2]
 t[1] = 0
 t.p1
 # %%
+# méthode __call__
+
+class Truc:
+    def __call__(self):
+        print("called!")
+
+t = Truc()
+# t est un Callable
+t()
+# %%
