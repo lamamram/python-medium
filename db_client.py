@@ -33,8 +33,12 @@ class SqliteDb(metaclass=SingleMeta):
             insert_query = f"insert into {table} ({','.join(fields)}) values ({','.join(['?'] * len(fields))})"
             print(insert_query)
             cur = self.__db.cursor()
-            cur.executemany(insert_query, values)
-            return f"{cur.rowcount} lines inserted."
+            try:
+                cur.executemany(insert_query, values)
+                self.__db.commit()
+                return {"valid": True, "response": f"{cur.rowcount} lines inserted."}
+            except lite.OperationalError as e:
+                return {"valid": False, "response": e}
 
 
     def execute(self, req, *, one=False):
@@ -42,7 +46,7 @@ class SqliteDb(metaclass=SingleMeta):
         try:
             cur.execute(req)
             if one:
-                return {"valid": True, "response": dict(cur.fetchone())} 
+                return {"valid": True, "response": dict(cur.fetchone())}
             return {"valid": True, "response": list(map(dict, cur.fetchall()))}
         except lite.OperationalError as e:
             return {"valid": False, "response": e}
@@ -58,7 +62,7 @@ class SqliteDb(metaclass=SingleMeta):
 if __name__ == "__main__":
     with SqliteDb("users.db") as db:
         db.execute_script("users.sql")
-        print(db.execute("SELECT COUNT(1) as nb FROM users"))
+        print(db.execute("SELECT COUNT(1) as nb FROM users", one=True))
 
 
 # %%

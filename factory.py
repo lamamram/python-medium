@@ -39,7 +39,7 @@ class DbFactory(AbstractFactory):
     
     def get_model(self, _id):
         with self.__db:
-            return self.__db.execute(f"SELECT * FROM {self.model}s WHERE id={_id}")
+            return self.__db.execute(f"SELECT * FROM {self.model} WHERE id={_id}")
     
     def add_model(self, model_data):
         with self.__db:
@@ -53,8 +53,9 @@ class UserDbAdapter:
         st = 1 if user_data["status"] == "active" else 0
         return [
             user_data["id"], 
-            ln, fn, user_data["email"], st, 
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
+            ln, fn, user_data["email"], st
+        #    datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ]
 
 
 
@@ -68,7 +69,11 @@ if __name__ == "__main__":
         user = response["response"]
         print(user)
         adapted = UserDbAdapter.from_api_user(user)
-        # print(adapted)
+        print(adapted)
         db = DbFactory("users")
-        db.add_model(adapted)
+        print(db.add_model([adapted]))
+    db = DbFactory("users")
+    print(db.get_model(649))
+# %%
+# %%
 # %%
