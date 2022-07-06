@@ -33,7 +33,7 @@ class GoRestApi:
         except (requests.ConnectionError, requests.HTTPError, ValueError) as e:
             return {"valid": False, "response": e}
 
-    def get_user(self, user_id):
+    def get_users(self, user_id):
         """
         méthode publique: télécharge un user
         """
