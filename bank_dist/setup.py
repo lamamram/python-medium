@@ -14,6 +14,10 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",
     packages=setuptools.find_packages(),
+    # informations sur les platforme
+    # pour fixer une platforme dans le nom d'archive: 
+    # ajouter  l'option --plat-name=... dans la commande
+    platforms=["win-amd64", "Linux", "OSX"],
     classifiers=[
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
