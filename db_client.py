@@ -57,3 +57,5 @@ if __name__ == "__main__":
         db.execute_script("users.sql")
         print(db.execute("SELECT COUNT(1) FROM users"))
 
+
+# %%
