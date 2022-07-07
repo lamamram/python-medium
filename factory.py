@@ -31,7 +31,7 @@ class ApiFactory(AbstractFactory):
         pass
 
 class DbFactory(AbstractFactory):
-    __FIELDS = ("id", "firstname", "lastname", "email", "status")
+    __FIELDS = ("id", "firstname", "lastname", "email", "status", "created_at")
 
     def __init__(self, model):
         self.model = model
@@ -39,23 +39,47 @@ class DbFactory(AbstractFactory):
     
     def get_model(self, _id):
         with self.__db:
-            return self.__db.execute(f"SELECT * FROM {self.model} WHERE id={_id}")
+            return self.__db.execute(f"SELECT * FROM {self.model} WHERE id={_id}", one=True)
     
     def add_model(self, model_data):
         with self.__db:
             return self.__db.insert(self.model, self.__FIELDS, model_data)
 
 
-class UserDbAdapter:
+# design pattern adapter
+class UserAdapter:
     @staticmethod
-    def from_api_user(user_data):
-        fn, ln = user_data["name"].split()
-        st = 1 if user_data["status"] == "active" else 0
+    def from_api(data):
+        fn, ln = data["name"].split()
+        st = 1 if data["status"] == "active" else 0
         return [
-            user_data["id"], 
-            ln, fn, user_data["email"], st
-        #    datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        ]
+            data["id"], 
+            ln, fn, data["email"], st, 
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
+    
+    @staticmethod
+    def from_db(data):
+        return data
+
+
+# magasin de factories
+class FactoryStore:
+    def __init__(self) -> None:
+        self.__factories = {}
+
+    def register(self, source, factory_class):
+        self.__factories[source] = factory_class
+
+    def get_factory(self, source, model):
+        fact = self.__factories.get(source)
+        if not fact:
+            raise KeyError(f"{source} not registered !")
+        return fact(model)
+
+
+store = FactoryStore()
+store.register("db", DbFactory)
+store.register("api", ApiFactory)
 
 
 
@@ -68,10 +92,11 @@ if __name__ == "__main__":
     if response["valid"]:
         user = response["response"]
         print(user)
-        adapted = UserDbAdapter.from_api_user(user)
+        adapted = UserAdapter.from_api(user)
         print(adapted)
         db = DbFactory("users")
         print(db.add_model([adapted]))
+    else: print(response["response"])
     db = DbFactory("users")
     print(db.get_model(649))
 # %%

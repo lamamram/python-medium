@@ -36,7 +36,7 @@ class SqliteDb(metaclass=SingleMeta):
             try:
                 cur.executemany(insert_query, values)
                 return {"valid": True, "response": f"{cur.rowcount} lines inserted."}
-            except lite.OperationalError as e:
+            except (lite.OperationalError, lite.IntegrityError) as e:
                 return {"valid": False, "response": e}
 
 
@@ -45,7 +45,9 @@ class SqliteDb(metaclass=SingleMeta):
         try:
             cur.execute(req)
             if one:
-                return {"valid": True, "response": dict(cur.fetchone())}
+                obj = cur.fetchone()
+                obj = dict(obj) if obj else {}
+                return {"valid": True, "response": obj}
             return {"valid": True, "response": list(map(dict, cur.fetchall()))}
         except lite.OperationalError as e:
             return {"valid": False, "response": e}
@@ -62,8 +64,8 @@ class SqliteDb(metaclass=SingleMeta):
 
 if __name__ == "__main__":
     with SqliteDb("users.db") as db:
-        db.execute_script("users.sql")
-        print(db.execute("SELECT COUNT(1) as nb FROM users", one=True))
+        # db.execute_script("users.sql")
+        print(db.execute("SELECT * FROM users WHERE id=649", one=True))
 
 
 # %%

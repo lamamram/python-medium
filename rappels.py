@@ -190,6 +190,10 @@ d = dict(tuples)
 
 keys, values = d.keys(), d.values()
 dict(zip(keys, values))
+
+# KeyError
+# d["k3"]
+d.get("k3", "default")
 # %%
 
 class C:
