@@ -34,6 +34,8 @@ class SqliteDb(metaclass=SingleMeta):
             print(insert_query)
             cur = self.__db.cursor()
             try:
+                values = list(map(lambda v: list(v.values()) if isinstance(v, dict) else v, values))
+                print(values)
                 cur.executemany(insert_query, values)
                 return {"valid": True, "response": f"{cur.rowcount} lines inserted."}
             except (lite.OperationalError, lite.IntegrityError) as e:
@@ -64,8 +66,8 @@ class SqliteDb(metaclass=SingleMeta):
 
 if __name__ == "__main__":
     with SqliteDb("users.db") as db:
-        # db.execute_script("users.sql")
-        print(db.execute("SELECT * FROM users WHERE id=649", one=True))
+        db.execute_script("users.sql")
+        # print(db.execute("SELECT * FROM users WHERE id=649", one=True))
 
 
 # %%

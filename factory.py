@@ -52,10 +52,13 @@ class UserAdapter:
     def from_api(data):
         fn, ln = data["name"].split()
         st = 1 if data["status"] == "active" else 0
-        return [
-            data["id"], 
-            ln, fn, data["email"], st, 
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
+        return {
+            "id": data["id"], 
+            "lastname": ln, 
+            "firstname": fn, 
+            "email": data["email"], 
+            "status": st, 
+            "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
     
     @staticmethod
     def from_db(data):
@@ -91,9 +94,7 @@ if __name__ == "__main__":
     response = a.get_model(649)
     if response["valid"]:
         user = response["response"]
-        print(user)
         adapted = UserAdapter.from_api(user)
-        print(adapted)
         db = DbFactory("users")
         print(db.add_model([adapted]))
     else: print(response["response"])
