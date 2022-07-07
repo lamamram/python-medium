@@ -76,4 +76,3 @@ if __name__ == "__main__":
     print(db.get_model(649))
 # %%
 # %%
-# %%

@@ -35,7 +35,6 @@ class SqliteDb(metaclass=SingleMeta):
             cur = self.__db.cursor()
             try:
                 cur.executemany(insert_query, values)
-                self.__db.commit()
                 return {"valid": True, "response": f"{cur.rowcount} lines inserted."}
             except lite.OperationalError as e:
                 return {"valid": False, "response": e}
