@@ -1,8 +1,9 @@
 # %%
+from abc import ABC
 from factory import *
 import json
 
-class Model:
+class Model(ABC):
 
     def __init__(self, _id, source, model, fields) -> None:
         self.__model = model
