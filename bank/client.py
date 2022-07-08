@@ -3,6 +3,7 @@ module hosting class Client
 """
 from datetime import datetime
 from bank.factories import store
+from time import sleep
 
 class Person:
     """
@@ -19,6 +20,7 @@ class Person:
         self.lastname = last
     
     def get_full_name(self) -> str:
+        sleep(3)
         return f"{self.firstname.capitalize()} {self.lastname.upper()}"
 
 

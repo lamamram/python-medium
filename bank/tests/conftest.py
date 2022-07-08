@@ -9,15 +9,19 @@ account_set = [
 
 acc_bal = [{"account": 1, "balance": 500.00}, {"account": 2, "balance": 300.00}]
 # CMD: pytest path/to/tests -v (verbose) -q (quiet) --tb=no (pas de code d'erreur)
+#      -k "balance and not alt"
+#      -m custom_markers (cf pytest.ini)
+#      --durations=n ou --duration-min=0.5 => tests lents
+# avec pip install pytest-xdist , -n nb_workers => exécution en parallèle
 
 ## autouse: la fixture est chargée 
-# dans toutes les fixtures et fcts de test
+# dans toutes les fixtures ???? et fcts de test
 
 ##
 # scope: périmétre d'utilisation d'une fixture
 # avant suppression (function, class, module, package, session (pytest))
 # attention aux tests qui modifient la fixture si scope large
-@pytest.fixture(autouse=True, scope="package")
+@pytest.fixture(autouse=True, scope="function")
 def client_1():
     c = Client(1)
     yield c
@@ -25,8 +29,8 @@ def client_1():
     print("released !")
     del c
 
-@pytest.fixture(scope="package")
-def account_1():
+@pytest.fixture(scope="function")
+def account_1(client_1):
     return Account(1, client_1)
 
 @pytest.fixture(scope="package", params=[1, 2])
@@ -43,6 +47,12 @@ def test_balance(request):
         ), 
         "balance": request.param["balance"]
     }
+
+@pytest.fixture
+def debug(request):
+    print(request.getfixturevalue("account_1"))
+    yield
+    print("end")
 
 # fonction globale de stratégie de test pytests
 def pytest_generate_tests(metafunc):
