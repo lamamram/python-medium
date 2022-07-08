@@ -1,29 +1,21 @@
 import pytest
 from bank import Account, Client
 
-# CMD: pytest path/to/tests -v (verbose) -q (quiet)
+# account_set = [
+#     (Account(k, Client(k)), b) 
+#     for k, b in {1: 500.00, 2: 300.00}.items()
+# ]
 
-## autouse: la fixture est chargée 
-# dans toutes les fixtures et fcts de test
+# def test_balance(account_1):
+#     assert 500.00 == account_1.getBalance()
 
-##
-# scope: périmétre d'utilisation d'une fixture
-# avant suppression (function, class, module, package, session (pytest))
-# attention aux tests qui modifient la fixture si scope large
-@pytest.fixture(autouse=True, scope="module")
-def client_1():
-    c = Client(1)
-    yield c
-    # code de cleanup
-    print("released !")
-    del c
+# pb si on paramètres les fixtures et les paramètres de fonctions
+# pb si on crée plusieurs paramètres de fonctions
+# => autant de test que le produit cartésiens => les tests croisés seront faux
 
-@pytest.fixture(scope="module")
-def account_1():
-    return Account(1, client_1)
-
-def test_balance(account_1):
-    assert 500.00 == account_1.getBalance()
+# @pytest.mark.parametrize("acc,balance", account_set)
+def test_balance(acc, balance):
+    assert balance == acc.getBalance()
 
 def test_overdraft(account_1: Account):
     account_1.withdraw(600)

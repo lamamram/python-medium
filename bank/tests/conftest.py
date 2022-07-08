@@ -1,7 +1,13 @@
 import pytest
 from bank import Account, Client
 
-# CMD: pytest path/to/tests -v (verbose) -q (quiet)
+
+account_set = [
+    (Account(k, Client(k)), b) 
+    for k, b in {1: 500.00, 2: 300.00}.items()
+]
+
+# CMD: pytest path/to/tests -v (verbose) -q (quiet) --tb=no (pas de code d'erreur)
 
 ## autouse: la fixture est chargée 
 # dans toutes les fixtures et fcts de test
@@ -22,5 +28,11 @@ def client_1():
 def account_1():
     return Account(1, client_1)
 
-def test_balance(account_1):
-    assert 500.00 == account_1.getBalance()
+@pytest.fixture(scope="package", params=[1, 2])
+def account(request):
+    return Account(request.param, Client(request.param))
+
+# fonction globale de stratégie de test pytests
+def pytest_generate_tests(metafunc):
+    if "balance" in metafunc.fixturenames and "acc" in metafunc.fixturenames:
+        metafunc.parametrize("acc,balance", account_set)
