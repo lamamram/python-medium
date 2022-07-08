@@ -17,6 +17,10 @@ from bank import Account, Client
 def test_balance(acc, balance):
     assert balance == acc.getBalance()
 
+
+def test_alt_balance(test_balance):
+    assert test_balance["balance"] == test_balance["account"].getBalance()
+
 def test_overdraft(account_1: Account):
     account_1.withdraw(600)
     assert account_1.overdraft

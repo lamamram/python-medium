@@ -7,6 +7,7 @@ account_set = [
     for k, b in {1: 500.00, 2: 300.00}.items()
 ]
 
+acc_bal = [{"account": 1, "balance": 500.00}, {"account": 2, "balance": 300.00}]
 # CMD: pytest path/to/tests -v (verbose) -q (quiet) --tb=no (pas de code d'erreur)
 
 ## autouse: la fixture est chargée 
@@ -31,6 +32,17 @@ def account_1():
 @pytest.fixture(scope="package", params=[1, 2])
 def account(request):
     return Account(request.param, Client(request.param))
+
+# fixture mêlant objets à tester et résultats attendus
+@pytest.fixture(scope="package", params=acc_bal)
+def test_balance(request):
+    return {
+        "account": Account(
+            request.param["account"], 
+            Client(request.param["account"])
+        ), 
+        "balance": request.param["balance"]
+    }
 
 # fonction globale de stratégie de test pytests
 def pytest_generate_tests(metafunc):
