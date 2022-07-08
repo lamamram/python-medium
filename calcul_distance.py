@@ -6,7 +6,6 @@ d'un même dept en France
 import os
 import pandas as pd
 import numpy as np
-from decorators import timer
 from itertools import combinations
 from multiprocessing import Pool, cpu_count
 # distance geodésique
@@ -16,10 +15,6 @@ from geopy.distance import geodesic
 
 # trouver le dept à partir du zipcode
 def get_dept(elem):
-    # if len(elem) == 5:
-    #     return "0" + elem[0]
-    # else:
-    #     return elem[0:2]
     return "0" + elem[0] if len(elem) == 4 else elem[0:2]
 
 
@@ -38,7 +33,6 @@ def get_max_geodesic(df):
             it = f"{i1} <-> {i2}"
     return it, max_distance
 
-@timer
 def process():
     with Pool(processes=cpu_count() // 2 + 2) as pool:
         depts = ["01", "03", "15", "29", "33", "92"]
@@ -59,7 +53,7 @@ if __name__ == "__main__":
             "villes_france.zip",
             encoding="iso-8859-1",
             # pas de colonnes
-            header=None
+            header=None,
         )
         villes_df.columns = pd.Index(["name", "zipcode", "lon", "lat"])
         villes_df["dept"] = villes_df["zipcode"].apply(get_dept)
@@ -86,5 +80,4 @@ if __name__ == "__main__":
     # print(get_max_geodesic(df))
     process()
 # %%
-list(combinations("abcd", r=2))
 # %%
